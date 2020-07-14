@@ -15,11 +15,11 @@ export const UserWithAvatar = ({
   user,
   orientation = 'vertical',
   link = true,
-  classes = {}
+  classes = {},
 }: UserAvatarProps) => {
   const linkClassnames = classnames(styles.issueUser, {
     [styles.vertical]: orientation === 'vertical',
-    [styles.horizontal]: orientation === 'horizontal'
+    [styles.horizontal]: orientation === 'horizontal',
   })
 
   const avatarClassnames = classnames(styles.avatar, classes.avatar)

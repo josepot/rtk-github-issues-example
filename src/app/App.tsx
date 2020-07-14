@@ -10,7 +10,7 @@ import { IssueDetailsPage } from 'features/issueDetails/IssueDetailsPage'
 import {
   displayRepo,
   setCurrentDisplayType,
-  setCurrentPage
+  setCurrentPage,
 } from 'features/issuesDisplay/issuesDisplaySlice'
 
 import './App.css'

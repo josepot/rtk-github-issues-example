@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
   issuesDisplay: issuesDisplayReducer,
   repoDetails: repoDetailsReducer,
   issues: issuesReducer,
-  comments: commentsReducer
+  comments: commentsReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

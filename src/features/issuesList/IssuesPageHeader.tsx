@@ -26,7 +26,7 @@ function OrgRepo({ org, repo }: OrgProps) {
 export function IssuesPageHeader({
   openIssuesCount = -1,
   org,
-  repo
+  repo,
 }: HeaderProps) {
   if (openIssuesCount === -1) {
     return (

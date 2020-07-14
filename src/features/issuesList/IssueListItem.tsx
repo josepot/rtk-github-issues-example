@@ -19,7 +19,7 @@ export const IssueListItem = ({
   user,
   comments,
   body = '',
-  showIssueComments
+  showIssueComments,
 }: Props) => {
   const onIssueClicked = (e: MouseEvent) => {
     e.preventDefault()

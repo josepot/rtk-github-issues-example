@@ -13,7 +13,7 @@ interface IssueProps {
 const IssueState = ({ issue: { state } }: IssueProps) => (
   <span
     className={classnames('issue-detail__state', styles.issueState, {
-      [styles.open]: state === 'open'
+      [styles.open]: state === 'open',
     })}
   >
     {state}

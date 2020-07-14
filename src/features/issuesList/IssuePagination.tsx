@@ -16,7 +16,7 @@ interface Props {
 export const IssuePagination = ({
   currentPage,
   pageCount,
-  onPageChange
+  onPageChange,
 }: Props) => {
   return (
     <div className={classnames('issuesPagination', styles.pagination)}>

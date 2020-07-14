@@ -17,7 +17,7 @@ interface CommentLoaded {
 const initialState: CommentsState = {
   commentsByIssue: {},
   loading: false,
-  error: null
+  error: null,
 }
 
 const comments = createSlice({
@@ -37,18 +37,18 @@ const comments = createSlice({
     getCommentsFailure(state, action: PayloadAction<string>) {
       state.loading = false
       state.error = action.payload
-    }
-  }
+    },
+  },
 })
 
 export const {
   getCommentsStart,
   getCommentsSuccess,
-  getCommentsFailure
+  getCommentsFailure,
 } = comments.actions
 export default comments.reducer
 
-export const fetchComments = (issue: Issue): AppThunk => async dispatch => {
+export const fetchComments = (issue: Issue): AppThunk => async (dispatch) => {
   try {
     dispatch(getCommentsStart())
     const comments = await getComments(issue.comments_url)

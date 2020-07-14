@@ -19,7 +19,7 @@ const issuesInitialState: IssuesState = {
   pageCount: 0,
   pageLinks: {},
   isLoading: false,
-  error: null
+  error: null,
 }
 
 function startLoading(state: IssuesState) {
@@ -50,15 +50,15 @@ const issues = createSlice({
       state.isLoading = false
       state.error = null
 
-      issues.forEach(issue => {
+      issues.forEach((issue) => {
         state.issuesByNumber[issue.number] = issue
       })
 
-      state.currentPageIssues = issues.map(issue => issue.number)
+      state.currentPageIssues = issues.map((issue) => issue.number)
     },
     getIssueFailure: loadingFailed,
-    getIssuesFailure: loadingFailed
-  }
+    getIssuesFailure: loadingFailed,
+  },
 })
 
 export const {
@@ -67,7 +67,7 @@ export const {
   getIssueStart,
   getIssueSuccess,
   getIssueFailure,
-  getIssuesFailure
+  getIssuesFailure,
 } = issues.actions
 
 export default issues.reducer
@@ -76,7 +76,7 @@ export const fetchIssues = (
   org: string,
   repo: string,
   page?: number
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch) => {
   try {
     dispatch(getIssuesStart())
     const issues = await getIssues(org, repo, page)
@@ -90,7 +90,7 @@ export const fetchIssue = (
   org: string,
   repo: string,
   number: number
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch) => {
   try {
     dispatch(getIssueStart())
     const issue = await getIssue(org, repo, number)

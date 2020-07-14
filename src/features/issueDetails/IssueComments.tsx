@@ -51,7 +51,7 @@ export function IssueComments({ comments = [], issue }: ICLProps) {
   // Comments are loaded
   return (
     <ul className={styles.commentsList}>
-      {comments.map(comment => (
+      {comments.map((comment) => (
         <li key={comment.id}>
           <IssueComment comment={comment} />
         </li>

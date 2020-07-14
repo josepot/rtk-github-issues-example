@@ -26,7 +26,7 @@ export const IssueDetailsPage = ({
   org,
   repo,
   issueId,
-  showIssuesList
+  showIssuesList,
 }: IDProps) => {
   const dispatch = useDispatch()
 
@@ -39,7 +39,7 @@ export const IssueDetailsPage = ({
       return {
         commentsLoading: state.comments.loading,
         commentsError: state.comments.error,
-        comments: state.comments.commentsByIssue[issueId]
+        comments: state.comments.commentsByIssue[issueId],
       }
     },
     shallowEqual

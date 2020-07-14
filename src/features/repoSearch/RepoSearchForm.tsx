@@ -17,21 +17,21 @@ export const RepoSearchForm = ({
   org,
   repo,
   setOrgAndRepo,
-  setJumpToPage
+  setJumpToPage,
 }: Props) => {
   const [currentOrg, setCurrentOrg] = useState(org)
   const [currentRepo, setCurrentRepo] = useState(repo)
   const [currentPageText, setCurrentPageText] = useState('1')
 
-  const onOrgChanged: ChangeHandler = e => {
+  const onOrgChanged: ChangeHandler = (e) => {
     setCurrentOrg(e.target.value)
   }
 
-  const onRepoChanged: ChangeHandler = e => {
+  const onRepoChanged: ChangeHandler = (e) => {
     setCurrentRepo(e.target.value)
   }
 
-  const onCurrentPageChanged: ChangeHandler = e => {
+  const onCurrentPageChanged: ChangeHandler = (e) => {
     setCurrentPageText(e.target.value)
   }
 

@@ -11,7 +11,7 @@ interface RepoDetailsState {
 
 const initialState: RepoDetailsState = {
   openIssuesCount: -1,
-  error: null
+  error: null,
 }
 
 const repoDetails = createSlice({
@@ -25,21 +25,20 @@ const repoDetails = createSlice({
     getRepoDetailsFailed(state, action: PayloadAction<string>) {
       state.openIssuesCount = -1
       state.error = action.payload
-    }
-  }
+    },
+  },
 })
 
 export const {
   getRepoDetailsSuccess,
-  getRepoDetailsFailed
+  getRepoDetailsFailed,
 } = repoDetails.actions
 
 export default repoDetails.reducer
 
-export const fetchIssuesCount = (
-  org: string,
-  repo: string
-): AppThunk => async dispatch => {
+export const fetchIssuesCount = (org: string, repo: string): AppThunk => async (
+  dispatch
+) => {
   try {
     const repoDetails = await getRepoDetails(org, repo)
     dispatch(getRepoDetailsSuccess(repoDetails))

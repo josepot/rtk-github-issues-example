@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const IssuesList = ({ issues, showIssueComments }: Props) => {
-  const renderedIssues = issues.map(issue => (
+  const renderedIssues = issues.map((issue) => (
     <li key={issue.id}>
       <IssueListItem {...issue} showIssueComments={showIssueComments} />
     </li>

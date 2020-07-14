@@ -22,7 +22,7 @@ export const IssuesListPage = ({
   repo,
   page = 1,
   setJumpToPage,
-  showIssueComments
+  showIssueComments,
 }: ILProps) => {
   const dispatch = useDispatch()
 
@@ -31,7 +31,7 @@ export const IssuesListPage = ({
     isLoading,
     error: issuesError,
     issuesByNumber,
-    pageCount
+    pageCount,
   } = useSelector((state: RootState) => state.issues)
 
   const openIssueCount = useSelector(
@@ -39,7 +39,7 @@ export const IssuesListPage = ({
   )
 
   const issues = currentPageIssues.map(
-    issueNumber => issuesByNumber[issueNumber]
+    (issueNumber) => issuesByNumber[issueNumber]
   )
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export const IssuesListPage = ({
     <IssuesList issues={issues} showIssueComments={showIssueComments} />
   )
 
-  const onPageChanged: OnPageChangeCallback = selectedItem => {
+  const onPageChanged: OnPageChangeCallback = (selectedItem) => {
     const newPage = selectedItem.selected + 1
     setJumpToPage(newPage)
   }

@@ -83,7 +83,7 @@ export async function getIssues(
     return {
       pageLinks,
       pageCount,
-      issues: issuesResponse.data
+      issues: issuesResponse.data,
     }
   } catch (err) {
     throw err
