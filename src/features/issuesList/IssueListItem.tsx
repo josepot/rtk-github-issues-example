@@ -7,10 +7,7 @@ import { IssueLabels } from 'components/IssueLabels'
 import { UserWithAvatar } from 'components/UserWithAvatar'
 
 import styles from './IssueListItem.module.css'
-
-type Props = Issue & {
-  showIssueComments: (issueId: number) => void
-}
+import { onIssueSelected } from 'state'
 
 export const IssueListItem = ({
   number,
@@ -19,12 +16,11 @@ export const IssueListItem = ({
   user,
   comments,
   body = '',
-  showIssueComments,
-}: Props) => {
+}: Issue) => {
   const onIssueClicked = (e: MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    showIssueComments(number)
+    onIssueSelected(number)
   }
 
   const pluralizedComments = comments === 1 ? 'comment' : 'comments'

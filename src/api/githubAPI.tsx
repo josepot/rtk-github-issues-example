@@ -1,5 +1,7 @@
-import axios from 'axios'
+import { ajax } from 'rxjs/ajax'
 import parseLink, { Links } from 'parse-link-header'
+import { map, pluck } from 'rxjs/operators'
+import { Observable } from 'rxjs'
 
 export interface Label {
   id: number
@@ -64,47 +66,40 @@ const getPageCount = (pageLinks: Links) => {
   }
 }
 
-export async function getIssues(
+export function getIssues(
   org: string,
   repo: string,
   page = 1
-): Promise<IssuesResult> {
+): Observable<IssuesResult> {
   const url = `https://api.github.com/repos/${org}/${repo}/issues?per_page=25&page=${page}`
+  return ajax.get(url).pipe(
+    map((r) => {
+      let pageCount = 0
+      const pageLinks = parseLink(r.xhr.getResponseHeader('link') as string)
 
-  try {
-    const issuesResponse = await axios.get<Issue[]>(url)
-    let pageCount = 0
-    const pageLinks = parseLink(issuesResponse.headers.link)
+      if (pageLinks !== null) {
+        pageCount = getPageCount(pageLinks)
+      }
 
-    if (pageLinks !== null) {
-      pageCount = getPageCount(pageLinks)
-    }
-
-    return {
-      pageLinks,
-      pageCount,
-      issues: issuesResponse.data,
-    }
-  } catch (err) {
-    throw err
-  }
+      return {
+        pageLinks,
+        pageCount,
+        issues: r.response as Issue[],
+      }
+    })
+  )
 }
 
-export async function getRepoDetails(org: string, repo: string) {
+export function getRepoOpenIssuesCount(org: string, repo: string) {
   const url = `https://api.github.com/repos/${org}/${repo}`
-
-  const { data } = await axios.get<RepoDetails>(url)
-  return data
+  return ajax.getJSON<RepoDetails>(url).pipe(pluck('open_issues_count'))
 }
 
-export async function getIssue(org: string, repo: string, number: number) {
+export function getIssue(org: string, repo: string, number: number) {
   const url = `https://api.github.com/repos/${org}/${repo}/issues/${number}`
-
-  const { data } = await axios.get<Issue>(url)
-  return data
+  return ajax.getJSON<Issue>(url)
 }
 
-export async function getComments(url: string) {
-  const { data } = await axios.get<Comment[]>(url)
-  return data
+export function getComments(url: string) {
+  return ajax.getJSON<Comment[]>(url)
 }

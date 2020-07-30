@@ -2,15 +2,11 @@ import React from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import { insertMentionLinks } from 'utils/stringUtils'
-import { Issue, Comment } from 'api/githubAPI'
+import { Comment } from 'api/githubAPI'
 import { UserWithAvatar } from 'components/UserWithAvatar'
 
 import styles from './IssueComments.module.css'
-
-interface ICLProps {
-  issue: Issue
-  comments: Comment[]
-}
+import { useIssueComments } from 'state'
 
 interface ICProps {
   comment: Comment
@@ -35,20 +31,8 @@ function IssueComment({ comment }: ICProps) {
   )
 }
 
-export function IssueComments({ comments = [], issue }: ICLProps) {
-  // The issue has no comments
-  if (issue.comments === 0) {
-    return <div className="issue-detail--no-comments">No comments</div>
-  }
-
-  // The issue has comments, but they're not loaded yet
-  if (!comments || comments.length === 0) {
-    return (
-      <div className="issue-detail--comments-loading">Comments loading...</div>
-    )
-  }
-
-  // Comments are loaded
+export const IssueComments: React.FC = () => {
+  const comments = useIssueComments()
   return (
     <ul className={styles.commentsList}>
       {comments.map((comment) => (

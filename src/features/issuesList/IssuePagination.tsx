@@ -1,34 +1,32 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import classnames from 'classnames'
-import Paginate, { ReactPaginateProps } from 'react-paginate'
+import Paginate from 'react-paginate'
 
 import styles from './IssuePagination.module.css'
 import './IssuePagination.css'
+import { useCurrentPage, useIssues, onPageChange } from 'state'
 
-export type OnPageChangeCallback = ReactPaginateProps['onPageChange']
+const IssuePaginationLoaded = () => {
+  const currentPage = useCurrentPage()
+  const { pageCount } = useIssues()
 
-interface Props {
-  currentPage: number
-  pageCount: number
-  onPageChange?: OnPageChangeCallback
-}
-
-export const IssuePagination = ({
-  currentPage,
-  pageCount,
-  onPageChange,
-}: Props) => {
-  return (
+  return pageCount === 0 ? null : (
     <div className={classnames('issuesPagination', styles.pagination)}>
       <Paginate
-        forcePage={currentPage}
+        forcePage={currentPage - 1}
         pageCount={pageCount}
         marginPagesDisplayed={2}
         pageRangeDisplayed={5}
-        onPageChange={onPageChange}
+        onPageChange={({ selected }) => onPageChange(selected + 1)}
         nextLabel="&rarr;"
         previousLabel="&larr;"
       />
     </div>
   )
 }
+
+export const IssuePagination = () => (
+  <Suspense fallback={null}>
+    <IssuePaginationLoaded />
+  </Suspense>
+)

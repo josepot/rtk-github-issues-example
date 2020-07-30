@@ -1,15 +1,8 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import { useCurrentRepoOpenIssuesCount, useCurrentRepo } from 'state'
 
-interface OrgProps {
-  org: string
-  repo: string
-}
-
-type HeaderProps = {
-  openIssuesCount: number
-} & OrgProps
-
-function OrgRepo({ org, repo }: OrgProps) {
+function OrgRepo() {
+  const { org, repo } = useCurrentRepo()
   return (
     <span>
       <a href={`https://github.com/${org}`} className="header__org">
@@ -23,24 +16,23 @@ function OrgRepo({ org, repo }: OrgProps) {
   )
 }
 
-export function IssuesPageHeader({
-  openIssuesCount = -1,
-  org,
-  repo,
-}: HeaderProps) {
-  if (openIssuesCount === -1) {
-    return (
-      <h1>
-        Open issues for <OrgRepo org={org} repo={repo} />
-      </h1>
-    )
-  } else {
-    const pluralizedIssue = openIssuesCount === 1 ? 'issue' : 'issues'
-    return (
-      <h1>
-        <span className="header__openIssues">{openIssuesCount}</span> open{' '}
-        {pluralizedIssue} for <OrgRepo org={org} repo={repo} />
-      </h1>
-    )
-  }
+function OpenIssues() {
+  const openIssuesCount = useCurrentRepoOpenIssuesCount()
+  return (
+    <>
+      <span className="header__openIssues">{openIssuesCount}</span> open{' '}
+      {openIssuesCount === 1 ? 'issue' : 'issues'} for {}
+    </>
+  )
+}
+
+export function IssuesPageHeader() {
+  return (
+    <h1>
+      <Suspense fallback={'Open issues for '}>
+        <OpenIssues />
+      </Suspense>
+      <OrgRepo />
+    </h1>
+  )
 }

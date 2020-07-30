@@ -1,51 +1,23 @@
-import React, { useState, ChangeEvent } from 'react'
-
+import React, { useState, useEffect } from 'react'
 import './pure-forms.css'
 import './pure-buttons.css'
+import {
+  useCurrentPage,
+  onLoadRepo,
+  onPageChange,
+  INITIAL_REPO,
+  INITIAL_ORG,
+} from 'state'
 
-interface Props {
-  org: string
-  repo: string
-  setOrgAndRepo: (org: string, repo: string) => void
-  setJumpToPage: (page: number) => void
-}
+export const RepoSearchForm = () => {
+  const [currentOrg, setCurrentOrg] = useState(INITIAL_ORG)
+  const [currentRepo, setCurrentRepo] = useState(INITIAL_REPO)
 
-type InputEvent = ChangeEvent<HTMLInputElement>
-type ChangeHandler = (e: InputEvent) => void
-
-export const RepoSearchForm = ({
-  org,
-  repo,
-  setOrgAndRepo,
-  setJumpToPage,
-}: Props) => {
-  const [currentOrg, setCurrentOrg] = useState(org)
-  const [currentRepo, setCurrentRepo] = useState(repo)
-  const [currentPageText, setCurrentPageText] = useState('1')
-
-  const onOrgChanged: ChangeHandler = (e) => {
-    setCurrentOrg(e.target.value)
-  }
-
-  const onRepoChanged: ChangeHandler = (e) => {
-    setCurrentRepo(e.target.value)
-  }
-
-  const onCurrentPageChanged: ChangeHandler = (e) => {
-    setCurrentPageText(e.target.value)
-  }
-
-  const onLoadRepoClicked = () => {
-    setOrgAndRepo(currentOrg, currentRepo)
-  }
-
-  const onJumpToPageClicked = () => {
-    const newPage = parseInt(currentPageText)
-
-    if (newPage >= 1) {
-      setJumpToPage(newPage)
-    }
-  }
+  const page = useCurrentPage()
+  const [currentPageText, setCurrentPageText] = useState(page.toString(10))
+  useEffect(() => {
+    setCurrentPageText(page.toString(10))
+  }, [page])
 
   return (
     <form className="pure-form">
@@ -53,16 +25,24 @@ export const RepoSearchForm = ({
         <label htmlFor="org" style={{ marginRight: 5 }}>
           Org:
         </label>
-        <input name="org" value={currentOrg} onChange={onOrgChanged} />
+        <input
+          name="org"
+          value={currentOrg}
+          onChange={(e) => setCurrentOrg(e.target.value)}
+        />
         <label htmlFor="repo" style={{ marginRight: 5, marginLeft: 10 }}>
           Repo:
         </label>
-        <input name="repo" value={currentRepo} onChange={onRepoChanged} />
+        <input
+          name="repo"
+          value={currentRepo}
+          onChange={(e) => setCurrentRepo(e.target.value)}
+        />
         <button
           type="button"
           className="pure-button pure-button-primary"
           style={{ marginLeft: 5 }}
-          onClick={onLoadRepoClicked}
+          onClick={() => onLoadRepo(currentOrg, currentRepo)}
         >
           Load Repo
         </button>
@@ -74,13 +54,13 @@ export const RepoSearchForm = ({
         <input
           name="jumpToPage"
           value={currentPageText}
-          onChange={onCurrentPageChanged}
+          onChange={(e) => setCurrentPageText(e.target.value)}
         />
         <button
           type="button"
           className="pure-button pure-button-primary"
           style={{ marginLeft: 5 }}
-          onClick={onJumpToPageClicked}
+          onClick={() => onPageChange(Number(currentPageText))}
         >
           Jump to Page
         </button>
