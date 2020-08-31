@@ -1,11 +1,13 @@
 import { Subject, merge } from 'rxjs'
-import { startWith, withLatestFrom, map, pluck, filter } from 'rxjs/operators'
 import {
-  bind,
-  switchMapSuspended,
-  shareLatest,
-  SUSPENSE,
-} from '@react-rxjs/core'
+  startWith,
+  withLatestFrom,
+  map,
+  pluck,
+  filter,
+  switchMap,
+} from 'rxjs/operators'
+import { bind, shareLatest, SUSPENSE } from '@react-rxjs/core'
 import {
   Issue,
   getIssues,
@@ -44,7 +46,6 @@ export const currentRepoAndPage$ = merge(
     }))
   ),
   pageSelected$.pipe(
-    filter((page) => page > 0),
     withLatestFrom(currentRepo$),
     map(([page, repo]) => ({ ...repo, page }))
   )
@@ -54,13 +55,17 @@ export const [useCurrentPage] = bind(currentRepoAndPage$.pipe(pluck('page')))
 
 export const [useIssues] = bind(
   currentRepoAndPage$.pipe(
-    switchMapSuspended(({ page, repo, org }) => getIssues(org, repo, page))
+    switchMap(({ page, repo, org }) =>
+      getIssues(org, repo, page).pipe(startWith(SUSPENSE))
+    )
   )
 )
 
 export const [useCurrentRepoOpenIssuesCount] = bind(
   currentRepo$.pipe(
-    switchMapSuspended(({ org, repo }) => getRepoOpenIssuesCount(org, repo))
+    switchMap(({ org, repo }) =>
+      getRepoOpenIssuesCount(org, repo).pipe(startWith(SUSPENSE))
+    )
   )
 )
 
@@ -80,7 +85,9 @@ export const [useIssue, issue$] = bind(
   selectedIssueId$.pipe(
     filter((id): id is number => id !== null),
     withLatestFrom(currentRepo$),
-    switchMapSuspended(([id, { org, repo }]) => getIssue(org, repo, id))
+    switchMap(([id, { org, repo }]) =>
+      getIssue(org, repo, id).pipe(startWith(SUSPENSE))
+    )
   )
 )
 
@@ -88,6 +95,6 @@ export const [useIssueComments] = bind(
   issue$.pipe(
     filter((issue): issue is Issue => issue !== SUSPENSE),
     pluck('comments_url'),
-    switchMapSuspended(getComments)
+    switchMap((url) => getComments(url).pipe(startWith(SUSPENSE)))
   )
 )
